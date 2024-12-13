@@ -1,0 +1,27 @@
+---
+ - name: install prometheus in ubuntu
+   tags: prome-ubuntu
+   apt:
+     name: prometheus
+     state: latest
+     update_cache: yes
+   when: ansible_distribution == "Ubuntu"
+
+ - name: install snapd in centos
+   tags: prome-centos
+   yum:
+     name:
+       - snapd
+     state: latest
+     update_cache: yes
+   when: ansible_distribution == "CentOS"
+
+ - name: enabling sockets
+   tags: prome-centos
+   command: systemctl enable --now snapd.socket
+   when: ansible_distribution == "CentOS"
+
+ - name: install prometheus using snapd
+   tags: prome-centos
+   command: snap install prometheus --classic
+   when: ansible_distribution == "CentOS"

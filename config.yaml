@@ -1,0 +1,31 @@
+---
+ - hosts: all
+   become: yes
+   gather_facts: true
+   pre_tasks:
+
+   - name: update repo index & install updates for ubuntu
+     tags: always
+     apt:
+       update_cache: yes
+     changed_when: false
+     when: ansible_distribution == "Ubuntu"
+
+   - name: motd player
+     copy:
+       content: "Ansible Managed by Abejar\n"
+       dest: /etc/motd
+
+   - name: update repo index & install updates for centos
+     tags: always
+     yum:
+       name: "*"
+       update_cache: yes
+     changed_when: false
+     when: ansible_distribution == "CentOS"
+
+ - hosts: all
+   become: true
+   roles:
+     - prometheus
+     - apache2
